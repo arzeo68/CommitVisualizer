@@ -1,3 +1,6 @@
+#!/bin/bash
 git clone git@github.com:arzeo68/CommitVisualizer.git
 cd CommitVisualizer
-./install.sh
+
+sh ./install.sh
+echo "----------- END ------------"
