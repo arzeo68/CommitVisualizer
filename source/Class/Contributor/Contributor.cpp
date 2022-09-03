@@ -55,6 +55,7 @@ size_t Contributor::getTotalDeletions() const {
 void Contributor::analyse(uint32_t startTimestamp, uint32_t endTimestamp) {
     this->computeAdditionAndDeletion();
     this->_computeAverageCommitPerDay(startTimestamp, endTimestamp);
+    this->_computeFirstAndLastCommit();
 }
 
 float Contributor::getAverageCommitPerDay() const {
@@ -67,4 +68,29 @@ float Contributor::getCodePercentage() const {
 
 void Contributor::setCodePercentage(float codePercentage) {
     Contributor::codePercentage = codePercentage;
+}
+
+void Contributor::_computeFirstAndLastCommit() {
+    std::sort(this->commits.begin(), this->commits.end(), [](const Commit &a, const Commit &b) {
+        return a.getTimestamp() < b.getTimestamp();
+    });
+
+    this->firstCommitDate = this->commits[0].getDate();
+    this->lastCommitDate = this->commits[this->commits.size() - 1].getDate();
+}
+
+const std::string &Contributor::getFirstCommitDate() const {
+    return firstCommitDate;
+}
+
+void Contributor::setFirstCommitDate(const std::string &firstCommitDate) {
+    Contributor::firstCommitDate = firstCommitDate;
+}
+
+const std::string &Contributor::getLastCommitDate() const {
+    return lastCommitDate;
+}
+
+void Contributor::setLastCommitDate(const std::string &lastCommitDate) {
+    Contributor::lastCommitDate = lastCommitDate;
 }

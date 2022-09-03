@@ -263,8 +263,10 @@ protected:
     template <class T>
     size_t sizeOfData(const T & data, decltype(((T *)nullptr)->size()) * /*dummy*/ = nullptr)
     {
-        return data.size();
+        return std::count_if(data.begin(), data.end(),
+                             [](char c) { return (static_cast<unsigned char>(c) & 0xC0) != 0x80; } );
     }
+
 
     /**
      * Try to find the size the column will take up

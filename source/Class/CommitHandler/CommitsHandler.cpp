@@ -72,13 +72,14 @@ void CommitsHandler::_display() {
     VariadicTable<int, int, int ,std::string, std::string> vtRepo({"Commits count", "Branches count", "Contributors count", "First commit", "Last commit"}, 15);
     vtRepo.addRow(_commits.size(), _branches.size(), _contributors.size(), startAndEndCommit.first.getDate(), startAndEndCommit.second.getDate());
     vtRepo.print(std::cout);
-    VariadicTable<std::string, int, double, int ,int> vtUser({"Name", "Commits", "Commit %", "Additions(+)", "Deletions(-)"}, 15);
-    vtUser.setColumnPrecision({1, 1, 2, 1, 1});
+    VariadicTable<std::string, int, double, int ,int, std::string, std::string> vtUser({"Name", "Commits", "Commit %", "Additions(+)", "Deletions(-)", "First commit", "Last commit"}, 15);
+    vtUser.setColumnPrecision({1, 1, 2, 1, 1, 1,1});
     vtUser.setColumnFormat({VariadicTableColumnFormat::AUTO,
                         VariadicTableColumnFormat::AUTO,
                         VariadicTableColumnFormat::PERCENT,
                         VariadicTableColumnFormat::AUTO,
-                        VariadicTableColumnFormat::AUTO});
+                        VariadicTableColumnFormat::AUTO,
+                        VariadicTableColumnFormat::AUTO,VariadicTableColumnFormat::AUTO});
 
     float totalCode = 0;
     for (auto &contributor : _contributors) {
@@ -99,7 +100,7 @@ void CommitsHandler::_display() {
 
     for (auto contrib: contribVector) {
         float commitPercentage = (float)(contrib.getCommitsCount()) / (float)(_commits.size()) * 100;
-        vtUser.addRow(contrib.getName(), contrib.getCommitsCount(), commitPercentage, contrib.getTotalAdditions(), contrib.getTotalDeletions());
+        vtUser.addRow(contrib.getName(), contrib.getCommitsCount(), commitPercentage, contrib.getTotalAdditions(), contrib.getTotalDeletions(), contrib.getFirstCommitDate(), contrib.getLastCommitDate());
     }
     vtUser.print(std::cout);
 }
