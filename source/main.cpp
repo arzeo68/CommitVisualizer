@@ -24,7 +24,7 @@ int main(int argc, char **argv) {
     }
     if (argc == 2) {
         if (std::string(argv[1]) == "--help" || std::string(argv[1]) == "-h") {
-            std::cout << "Usage: ./RepositoryStat <path to git repository>" << std::endl;
+            std::cout << "Usage: repositoryStat <path to git repository>" << std::endl;
             return 0;
         }
         CommitsHandler commitsHandler(argv[1]);

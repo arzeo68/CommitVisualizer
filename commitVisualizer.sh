@@ -5,4 +5,7 @@ cd build
 cmake ..
 make
 sudo cp repositoryStat /usr/local/bin
+cd ../../
+rm -rf CommitVisualizer
+rm -rf commitVisualizer.sh
 echo "----------- END ------------"
