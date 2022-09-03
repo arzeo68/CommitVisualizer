@@ -267,7 +267,6 @@ protected:
                              [](char c) { return (static_cast<unsigned char>(c) & 0xC0) != 0x80; } );
     }
 
-
     /**
      * Try to find the size the column will take up
      *

@@ -45,7 +45,7 @@ public:
     void setLastCommitDate(const std::string &lastCommitDate);
 
 private:
-
+    std::string _executeCommand(const char* cmd);
     float codePercentage = 0;
     std::string name;
     std::vector<Commit> commits;
@@ -54,6 +54,8 @@ private:
     std::string firstCommitDate;
     std::string lastCommitDate;
     float averageCommitPerDay = 0;
+
+    std::string _repositoryPath;
 };
 
 

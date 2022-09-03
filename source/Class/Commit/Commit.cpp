@@ -41,7 +41,6 @@ void Commit::parse() {
     message = cpy;
 
 //    _dump();
-    _computeAdditionAndDeletion();
 }
 
 void Commit::_dump() {
@@ -85,33 +84,6 @@ uint32_t Commit::getTimestamp() const {
     return timestamp;
 }
 
-void Commit::_computeAdditionAndDeletion() {
-    std::string command = "cd " + _repositoryPath + " && git diff --shortstat " + hash +"~ " + hash;
-    std::string res = _executeCommand(command.c_str());
-
-    std::string delimiter = ", ";
-    std::vector<std::string> stats;
-
-    size_t pos = 0;
-    std::string token;
-
-    while ((pos = res.find(delimiter)) != std::string::npos) {
-        token = res.substr(0, pos);
-        stats.emplace_back(token);
-        res.erase(0, pos + delimiter.length());
-    }
-    stats.emplace_back(res);
-
-    for (auto &stat : stats) {
-        if ((pos = stat.find("insertions(+)")) != std::string::npos) {
-            additions += std::atoi(stat.substr(0, pos - 1).c_str());
-//
-        } else if ((pos = stat.find("deletions(-)")) != std::string::npos) {
-            deletions += std::atoi(stat.substr(0, pos - 1).c_str());
-        }
-    }
-}
-
 uint32_t Commit::getAdditions() const {
     return additions;
 }
@@ -119,6 +91,10 @@ uint32_t Commit::getAdditions() const {
 uint32_t Commit::getDeletions() const {
     return deletions;
 }
+const std::string &Commit::getRepositoryPath() const {
+    return _repositoryPath;
+}
+
 
 std::string Commit::_executeCommand(const char *cmd) {
     std::array<char, 128> buffer;

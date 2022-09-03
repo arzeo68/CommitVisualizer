@@ -4,11 +4,14 @@
 
 #include <iostream>
 #include <algorithm>
+#include <array>
+#include <memory>
 #include "Contributor.hpp"
 
 Contributor::Contributor(Commit commit) {
     this->name = commit.getAuthorName();
     this->addCommit(commit);
+    _repositoryPath = commit.getRepositoryPath();
 }
 
 void Contributor::addCommit(Commit commit) {
@@ -26,15 +29,26 @@ const std::string &Contributor::getName() const {
 void Contributor::dump() {
     std::cout << "Name: " << this->name << std::endl;
     std::cout << "Commits count: " << this->commits.size() << std::endl;
+
+
     std::cout << "------------------------" << std::endl;
 }
 
 void Contributor::computeAdditionAndDeletion() {
-    for (auto &commit : commits) {
-        totalAdditions += commit.getAdditions();
-        totalDeletions += commit.getDeletions();
-    }
 
+    std::string cmd = "cd " + _repositoryPath + "&& git log --author=\"" + name + "\" --shortstat | awk '/^ [0-9]/ { f += $1; i += $4; d += $6 } END { printf(\"%d files changed, %d insertions(+), %d deletions(-)\", f, i, d) }'";
+    std::string res = _executeCommand(cmd.c_str());
+    // file changes
+
+    std::string delimiter = " files changed, ";
+    size_t pos = res.find(delimiter);
+    res.erase(0, pos + delimiter.size());
+    totalAdditions = std::atoi(res.c_str());
+
+    delimiter = ", ";
+    pos = res.find(delimiter);
+    res.erase(0, pos + delimiter.size());
+    totalDeletions = std::atoi(res.c_str());
 }
 
 void Contributor::_computeAverageCommitPerDay(uint32_t startTimestamp, uint32_t endTimestamp) {
@@ -93,4 +107,17 @@ const std::string &Contributor::getLastCommitDate() const {
 
 void Contributor::setLastCommitDate(const std::string &lastCommitDate) {
     Contributor::lastCommitDate = lastCommitDate;
+}
+
+std::string Contributor::_executeCommand(const char *cmd) {
+    std::array<char, 128> buffer;
+    std::string result;
+    std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(cmd, "r"), pclose);
+    if (!pipe) {
+        throw std::runtime_error("popen() failed!");
+    }
+    while (fgets(buffer.data(), buffer.size(), pipe.get()) != nullptr) {
+        result += buffer.data();
+    }
+    return result;
 }

@@ -5,7 +5,6 @@
 #ifndef COMMITVIRTULAIZER_COMMIT_HPP
 #define COMMITVIRTULAIZER_COMMIT_HPP
 
-
 #include <string>
 
 class Commit {
@@ -30,7 +29,6 @@ private:
 
     void _dump();
     void parse();
-    void _computeAdditionAndDeletion();
     std::string _commit;
     std::string hash;
     std::string message;
@@ -39,6 +37,8 @@ public:
     uint32_t getAdditions() const;
 
     uint32_t getDeletions() const;
+
+    const std::string &getRepositoryPath() const;
 
 private:
 
@@ -54,3 +54,4 @@ private:
 
 
 #endif //COMMITVIRTULAIZER_COMMIT_HPP
+//git log --author="alexis WALTER" --shortstat | awk '/^ [0-9]/ { f += $1; i += $4; d += $6 } END { printf("%d files changed, %d insertions(+), %d deletions(-)", f, i, d) }'

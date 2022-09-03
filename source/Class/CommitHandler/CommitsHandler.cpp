@@ -50,10 +50,9 @@ void CommitsHandler::splitLogIntoCommit(std::string log) {
     }
     commits.emplace_back(log);
 
-    for (auto &commit : commits) {
-        _commits.emplace_back(Commit(commit, _repositoryPath));
+    for (int i = 0; i < commits.size(); ++i) {
+        _commits.emplace_back(Commit(commits[i], _repositoryPath));
     }
-
 }
 
 void CommitsHandler::splitCommitIntoAuthors() {
